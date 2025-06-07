@@ -1,11 +1,13 @@
-import { Button } from "@/components/ui/button"
- 
+import { Header } from "@/components/header";
+
 function App() {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center">
-      <Button>Click me</Button>
+    <div className="antialiased">
+      <div className="flex min-h-screen flex-col">
+        <Header />
+      </div>
     </div>
-  )
+  );
 }
- 
-export default App
+
+export default App;

@@ -118,3 +118,33 @@
     @apply bg-background text-foreground;
   }
 }
+
+body,
+html {
+  height: 100%;
+}
+
+body {
+  background-color: #e4e4e4;
+}
+
+::selection {
+  background-color: #0157e4;
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: #0157e4;
+  color: #ffffff;
+}
+
+@layer base {
+  button,
+  [role="button"] {
+    cursor: pointer;
+  }
+  button:disabled,
+  [role="button"]:disabled {
+    cursor: default;
+  }
+}
