@@ -1,150 +1,129 @@
-# The Pato Programming Language 🦆
+# A Linguagem de Programação Pato 🦆
 
-Don't mind the duck. Pato is a declarative programming language to generate beautiful forms with shadcn/ui, React Hook Form and Zod. Under the hood, Pato scripts are compiled end-to-end into fully-type-safe React + TypeScript components.
+Pato é uma linguagem de programação específica de domínio projetada para simplificar a criação de formulários web usando React, TypeScript e shadcn/ui. Ela fornece uma sintaxe declarativa e limpa para definir formulários e gera automaticamente componentes React prontos para produção com validação de formulário, estilização e recursos de acessibilidade integrados.
 
-Pato features:
-- Variable declarations with mandatory type annotations
--	Conditional logic support
-- Loop constructs
+Para explorar a linguagem, acesse:
 
-## Example code
+## Características
+
+- **Definição Declarativa de Formulários**: Defina formulários usando uma sintaxe simples e intuitiva
+- **Formulários Dinâmicos**: Crie formulários dinâmicos com loops e lógica condicional
+- **Componentes UI Modernos**: Integração com shadcn/ui para componentes bonitos e acessíveis
+- **Validação de Formulários**: Geração automática de esquemas Zod para validação robusta
+- **Campos Condicionais**: Suporte para campos de formulário condicionais baseados na entrada do usuário
+- **Integração React**: Integração perfeita com React e React Hook Form
+
+## Exemplo
+
+Aqui está um exemplo simples de um formulário de RSVP para aniversário em Pato:
+
 ```pato
-let meals: Array<String> = ["Chicken", "Beef", "Vegetarian"]
-let maxGuests: Number    = 3
+{
+  var is_adult bool = true
+  var has_plus_one bool = true
+  var number_of_kids int = 2
+  var counter int = 0
 
-form BirthdayRSVP {
-  metadata {
-    heading = "Birthday RSVP"
-  }
-
-  fields {
-    StringField "name" {
-      label       = "Name"
-      placeholder = "Enter your full name"
-      required    = true
+  form BirthdayRSVP {
+    string_field guest_name {
+      label: "Your Name"
+      placeholder: "Enter your full name"
+      required: true
     }
 
-    EmailField "email" {
-      label       = "Email"
-      placeholder = "Enter your email address"
-      required    = true
+    string_field email {
+      label: "Email Address"
+      placeholder: "Enter your email"
+      required: true
     }
 
-    StringField "phone" {
-      label       = "Phone Number"
-      placeholder = "Enter your phone number"
-      required    = true
+    select_field attendance {
+      label: "Will you attend?"
+      options: ["Yes", "No", "Maybe"]
+      required: true
     }
 
-    SelectField "mealChoice" {
-      label       = "Meal Choice"
-      placeholder = "Select your meal"
-      options {
-        loop meal in meals {
-          Option {
-            label = meal
-            value = meal.toLowerCase()
-          }
-        }
+    if (is_adult) {
+      select_field dietary_restrictions {
+        label: "Dietary Restrictions"
+        options: ["None", "Vegetarian", "Vegan", "Gluten-Free", "Other"]
+        required: true
       }
     }
 
-    CheckboxField "willAttend" {
-      label       = "Will you attend?"
-      description = "Check if you will attend the birthday party"
-    }
+    if (has_plus_one) {
+      string_field plus_one_name {
+        label: "Plus One Name"
+        placeholder: "Enter your plus one's name"
+        required: true
+      }
 
-    if willAttend.answer {
-      loop i from 1 to maxGuests {
-        StringField "guest\(i)" {
-          label       = "Guest #\(i) Name"
-          placeholder = "Enter guest \(i)’s name"
-        }
+      select_field plus_one_dietary {
+        label: "Plus One Dietary Restrictions"
+        options: ["None", "Vegetarian", "Vegan", "Gluten-Free", "Other"]
+        required: true
       }
     }
 
-    loop i from 1 to 2 {
-      StringField "note\(i)" {
-        label       = "Additional Note \(i)"
-        placeholder = "Enter note #\(i)"
+    for (counter < number_of_kids) {
+      string_field child_name {
+        label: "Child Name"
+        placeholder: "Enter child's name"
+        required: true
       }
+
+      select_field child_dietary {
+        label: "Child Dietary Restrictions"
+        options: ["None", "Vegetarian", "Vegan", "Gluten-Free", "Other"]
+        required: true
+      }
+
+      counter = counter + 1
+    }
+
+    string_field gift_preference {
+      label: "Gift Preference"
+      placeholder: "Enter your gift preference or registry link"
+      required: false
     }
   }
 }
 ```
 
+## Como Funciona
 
-## EBNF
+1. **Parser**: O compilador Pato analisa suas definições de formulário em uma Árvore Sintática Abstrata (AST)
+2. **Tabela de Símbolos**: Mantém o escopo das variáveis e informações de tipo
+3. **Form Store**: Gerencia definições de formulário e seus relacionamentos
+4. **Gerador de Formulários**: Converte definições de formulário em componentes React com:
+   - Tipos TypeScript
+   - Esquemas de validação Zod
+   - Integração com React Hook Form
+   - Componentes shadcn/ui
 
-```ebnf
-FORM_SCRIPT    = { TOP_LEVEL_DECL } ;
+## Saída Gerada
 
-TOP_LEVEL_DECL = LET_DECL | FORM_DECL ;
+O compilador gera componentes React com:
+- Suporte completo ao TypeScript
+- Validação de formulário usando Zod
+- Componentes UI modernos do shadcn/ui
+- Gerenciamento adequado do estado do formulário com React Hook Form
+- Recursos de acessibilidade
+- Design responsivo
 
-LET_DECL      = "let" IDENTIFIER ":" TYPE "=" LITERAL_LIST ;
+## Começando
 
-FORM_DECL     = "form" IDENTIFIER "{"
-  METADATA_BLOCK
-  FIELDS_BLOCK
-"}" ;
+1. Instale o compilador Pato
+2. Escreva suas definições de formulário em Pato
+3. Compile para componentes React
+4. Importe e use os componentes gerados em sua aplicação React
 
-METADATA_BLOCK = "metadata" "{"
-  { META_PROP }
-"}" ;
+## Requisitos
 
-META_PROP     = IDENTIFIER "=" LITERAL ;
+- Node.js 22+
+- React 19+
+- TypeScript 5.8+
 
-FIELDS_BLOCK  = "fields" "{"
-  { FIELD_DECL }
-"}" ;
+## Licença
 
-FIELD_DECL    = FieldKind IDENTIFIER "{"
-  { FIELD_PROP }
-  [ OPTIONS_BLOCK ]
-  [ CONDITIONAL_BLOCK ]
-  [ LOOP_BLOCK ]
-"}" ;
-
-FieldKind     = "StringField" | "EmailField" | "SelectField" | "CheckboxField" ;
-
-FIELD_PROP    = IDENTIFIER "=" ( LITERAL | BOOLEAN ) ;
-
-OPTIONS_BLOCK = "options" "{"
-  LOOP_BLOCK
-"}" ;
-
-CONDITIONAL_BLOCK = "if" CONDITION "{"
-  { FIELD_DECL }
-"}" ;
-
-LOOP_BLOCK    = "loop" LOOP_HEADER "{"
-  { FIELD_DECL }
-"}" ;
-
-LOOP_HEADER   = IDENTIFIER "in" IDENTIFIER | IDENTIFIER "from" NUMBER "to" IDENTIFIER ;
-
-CONDITION     = IDENTIFIER "." "answer"
-(
-("==" | "!=" | ">" | "<" | ">=" | "<=") ( LITERAL | IDENTIFIER )
-) ? ;
-
-TYPE          = "Array<" SimpleType ">" | SimpleType ;
-
-SimpleType    = "String" | "Number" | "Boolean" ;
-
-LITERAL_LIST  = "[" [ LITERAL { "," LITERAL } ] "]" ;
-
-LITERAL       = STRING | NUMBER ;
-
-IDENTIFIER    = letter { letter | digit | "_" } ;
-
-STRING        = '"' { character_except_quote } '"' ;
-
-NUMBER        = digit { digit } ;
-
-BOOLEAN       = "true" | "false" ;
-
-letter        = ? A–Z or a–z ? ;
-digit         = ? 0–9 ? ;
-character_except_quote = ? [^"\n] ? ;
-```
+Licença MIT - sinta-se livre para usar o Pato em seus projetos!
