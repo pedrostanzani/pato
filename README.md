@@ -2,7 +2,7 @@
 
 Pato é uma linguagem de programação específica de domínio projetada para simplificar a criação de formulários web usando React, TypeScript e shadcn/ui. Ela fornece uma sintaxe declarativa e limpa para definir formulários e gera automaticamente componentes React prontos para produção com validação de formulário, estilização e recursos de acessibilidade integrados.
 
-Para explorar a linguagem, acesse:
+Para explorar a linguagem, acesse: https://pato-playground.vercel.app/
 
 ## Características
 
